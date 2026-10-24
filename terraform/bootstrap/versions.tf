@@ -7,7 +7,16 @@ terraform {
       version = "~> 6.0"
     }
   }
+
+  backend "s3" {
+    bucket       = "url-shortener-tfstate-641471776760-eu-central-1"
+    key          = "bootstrap/terraform.tfstate"
+    region       = "eu-central-1"
+    encrypt      = true
+    use_lockfile = true
+  }
 }
+
 
 provider "aws" {
   region = var.region
