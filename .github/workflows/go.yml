@@ -14,6 +14,9 @@ env:
   AWS_REGION: eu-central-1
   AWS_ROLE_ARN: arn:aws:iam::641471776760:role/url-shortener-github-actions
   ECR_REPOSITORY: url-shortener
+  ECR_REGISTRY: 641471776760.dkr.ecr.eu-central-1.amazonaws.com
+  DEPLOY_ROLE_ARN: arn:aws:iam::641471776760:role/url-shortener-github-deploy
+  FUNCTION_NAME: url-shortener
 
 jobs:
 
@@ -74,3 +77,31 @@ jobs:
         tags: ${{ steps.ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
+
+
+  deploy:
+    needs: image
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+    - name: Configure AWS credentials (deploy role)
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: ${{ env.DEPLOY_ROLE_ARN }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Deploy new image to Lambda
+      run: |
+        aws lambda update-function-code \
+          --function-name "$FUNCTION_NAME" \
+          --image-uri "$ECR_REGISTRY/$ECR_REPOSITORY:$GITHUB_SHA"
+        aws lambda wait function-updated --function-name "$FUNCTION_NAME"
+
+    - name: Smoke test
+      run: |
+        URL=$(aws lambda get-function-url-config --function-name "$FUNCTION_NAME" \
+          --query FunctionUrl --output text)
+        curl --fail --silent --show-error --retry 3 "${URL}health"

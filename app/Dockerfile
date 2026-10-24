@@ -20,4 +20,5 @@ COPY --from=build /out/server /server
 ENV PORT=8080
 EXPOSE 8080
 USER nonroot:nonroot
+WORKDIR /
 ENTRYPOINT ["/server"]
