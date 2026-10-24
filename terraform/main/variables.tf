@@ -9,3 +9,9 @@ variable "project" {
   type        = string
   default     = "url-shortener"
 }
+
+variable "github_repo" {
+  description = "GitHub repository allowed to assume the CI role, in GitHub's OIDC subject format (owner@owner_id/repo@repo_id)"
+  type        = string
+  default     = "Khalid-iq@183847738/go-url-shortener-aws@1432310888"
+}
