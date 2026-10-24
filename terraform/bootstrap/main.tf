@@ -2,7 +2,7 @@ data "aws_caller_identity" "current" {}
 
 # Account ID in the name keeps it globally unique.
 resource "aws_s3_bucket" "tfstate" {
-  bucket = "${var.project}-tfstate-${data.aws_caller_identity.current.account_id}"
+  bucket = "${var.project}-tfstate-${data.aws_caller_identity.current.account_id}-${var.region}"
 
   lifecycle {
     prevent_destroy = true
