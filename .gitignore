@@ -11,3 +11,4 @@ app/server
 .terraform/
 *.tfstate
 *.tfstate.backup
+tfplan
