@@ -1,0 +1,8 @@
+# Keep the build context small and avoid copying things the image doesn't need
+
+Dockerfile
+.dockerignore
+*_test.go
+url-shortener
+server
+.DS_Store
