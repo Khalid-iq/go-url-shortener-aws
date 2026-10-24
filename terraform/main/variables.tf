@@ -9,3 +9,9 @@ variable "project" {
   type        = string
   default     = "url-shortener"
 }
+
+variable "github_repo" {
+  description = "GitHub repository allowed to assume the CI role (owner/name)"
+  type        = string
+  default     = "Khalid-iq/go-url-shortener-aws"
+}
