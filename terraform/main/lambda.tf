@@ -64,6 +64,7 @@ resource "aws_lambda_function" "app" {
     variables = {
       # Lambda Web Adapter: check /health before sending traffic.
       AWS_LWA_READINESS_CHECK_PATH = "/health"
+      TABLE_NAME                   = aws_dynamodb_table.links.name
     }
   }
 
