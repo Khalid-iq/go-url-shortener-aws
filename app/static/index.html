@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shorten a link</title>
+<style>
+  :root {
+    --bg: #eef2f1;
+    --surface: #ffffff;
+    --ink: #1c2b2a;
+    --muted: #5b6b69;
+    --accent: #1f6f5c;
+    --error: #a33a2a;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #121a19;
+      --surface: #1b2625;
+      --ink: #e4ecea;
+      --muted: #94a5a2;
+      --accent: #6fcfb3;
+      --error: #f08a78;
+      color-scheme: dark;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--ink);
+    font: 17px/1.5 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+  }
+  main { width: 100%; max-width: 560px; }
+  h1 { font-size: 2rem; line-height: 1.2; margin: 0 0 8px; letter-spacing: -0.02em; }
+  p.lead { color: var(--muted); margin: 0 0 28px; }
+  form { display: flex; gap: 8px; }
+  input {
+    flex: 1;
+    min-width: 0;
+    padding: 12px 14px;
+    font: inherit;
+    color: var(--ink);
+    background: var(--surface);
+    border: 1px solid color-mix(in srgb, var(--muted) 40%, transparent);
+    border-radius: 8px;
+  }
+  button {
+    padding: 12px 18px;
+    font: inherit;
+    font-weight: 600;
+    color: var(--bg);
+    background: var(--accent);
+    border: 0;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  button:disabled { opacity: 0.6; cursor: wait; }
+  input:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  #error { color: var(--error); min-height: 1.5em; margin: 10px 0 0; }
+  #result { margin-top: 28px; display: none; }
+  #result.show { display: block; }
+  .short {
+    font: 600 1.5rem/1.3 ui-monospace, "SF Mono", Menlo, monospace;
+    color: var(--accent);
+    word-break: break-all;
+    text-decoration: none;
+  }
+  .original { color: var(--muted); font-size: 0.9rem; word-break: break-all; margin: 6px 0 14px; }
+  #copy { color: var(--ink); background: transparent; border: 1px solid var(--muted); padding: 8px 14px; }
+  @media (max-width: 480px) { form { flex-direction: column; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>Shorten a link</h1>
+  <p class="lead">Paste a long link and get a short one you can share.</p>
+
+  <form id="form">
+    <label for="url" hidden>Long link</label>
+    <input id="url" type="url" placeholder="https://example.com/a/very/long/link" required>
+    <button id="submit" type="submit">Shorten</button>
+  </form>
+  <p id="error" role="alert"></p>
+
+  <section id="result" aria-live="polite">
+    <a id="short" class="short" target="_blank" rel="noopener"></a>
+    <p id="original" class="original"></p>
+    <button id="copy" type="button">Copy link</button>
+  </section>
+</main>
+
+<script>
+  const form = document.getElementById("form");
+  const input = document.getElementById("url");
+  const submit = document.getElementById("submit");
+  const error = document.getElementById("error");
+  const result = document.getElementById("result");
+  const shortLink = document.getElementById("short");
+  const original = document.getElementById("original");
+  const copy = document.getElementById("copy");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    error.textContent = "";
+    submit.disabled = true;
+    try {
+      const res = await fetch("/shorten", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: input.value.trim() }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Couldn’t shorten that link.");
+      shortLink.href = data.short_url;
+      shortLink.textContent = data.short_url;
+      original.textContent = input.value.trim();
+      copy.textContent = "Copy link";
+      result.classList.add("show");
+    } catch (err) {
+      error.textContent = err.message;
+    } finally {
+      submit.disabled = false;
+    }
+  });
+
+  copy.addEventListener("click", async () => {
+    await navigator.clipboard.writeText(shortLink.textContent);
+    copy.textContent = "Copied";
+  });
+</script>
+</body>
+</html>

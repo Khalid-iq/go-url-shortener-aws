@@ -1,0 +1,13 @@
+# Go build output
+app/url-shortener
+app/server
+*.exe
+
+# OS / editor
+.DS_Store
+.vscode/
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
