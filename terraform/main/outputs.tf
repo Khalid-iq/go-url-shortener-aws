@@ -22,3 +22,8 @@ output "name_servers" {
   description = "Set these as Custom DNS nameservers"
   value       = aws_route53_zone.main.name_servers
 }
+
+output "site_url" {
+  description = "Public URL of the app"
+  value       = "https://${var.domain_name}/"
+}
