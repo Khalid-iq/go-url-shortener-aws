@@ -17,3 +17,8 @@ output "function_url" {
   description = "Public HTTPS URL of the app"
   value       = aws_lambda_function_url.app.function_url
 }
+
+output "name_servers" {
+  description = "Set these as Custom DNS nameservers"
+  value       = aws_route53_zone.main.name_servers
+}

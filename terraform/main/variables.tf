@@ -21,3 +21,9 @@ variable "image_tag" {
   type        = string
   default     = "bcd73c52547155181ee7d0600c03714061fcece3"
 }
+
+variable "domain_name" {
+  description = "Public domain for the shortener"
+  type        = string
+  default     = "kqlinks.com"
+}
