@@ -10,7 +10,7 @@ terraform {
 
 
   backend "s3" {
-    bucket       = "url-shortener-tfstate-641471776760-eu-central-1"
+    bucket       = "url-shortener-tfstate-541271671872-eu-central-1"
     key          = "main/terraform.tfstate"
     region       = "eu-central-1"
     encrypt      = true
