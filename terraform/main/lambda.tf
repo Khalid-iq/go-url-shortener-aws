@@ -86,19 +86,11 @@ resource "aws_lambda_function_url" "app" {
   authorization_type = "NONE"
 }
 
-# Function URLs with auth NONE need both permissions (since Oct 2025).
-resource "aws_lambda_permission" "url_invoke_url" {
-  statement_id           = "FunctionURLAllowPublicAccess"
-  action                 = "lambda:InvokeFunctionUrl"
-  function_name          = aws_lambda_function.app.function_name
-  principal              = "*"
-  function_url_auth_type = "NONE"
-}
+# Stop managing AWS's statement, without deleting it.
+removed {
+  from = aws_lambda_permission.url_invoke_url
 
-resource "aws_lambda_permission" "url_invoke_function" {
-  statement_id             = "FunctionURLInvokeAllowPublicAccess"
-  action                   = "lambda:InvokeFunction"
-  function_name            = aws_lambda_function.app.function_name
-  principal                = "*"
-  invoked_via_function_url = true # only through the URL, not the Invoke API
+  lifecycle {
+    destroy = false
+  }
 }
