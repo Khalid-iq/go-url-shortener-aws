@@ -8,6 +8,8 @@ import (
 	"math/big"
 	"net/http"
 	"net/url"
+	"os"
+	"strings"
 )
 
 //go:embed static/index.html
@@ -129,9 +131,10 @@ func isValidURL(raw string) bool {
 	return (u.Scheme == "http" || u.Scheme == "https") && u.Host != ""
 }
 
-// baseURL builds "https://yourdomain.com" from the request.
-// Behind a load balancer, the original scheme arrives in X-Forwarded-Proto.
 func baseURL(r *http.Request) string {
+	if b := os.Getenv("BASE_URL"); b != "" {
+		return strings.TrimSuffix(b, "/")
+	}
 	scheme := "http"
 	if r.TLS != nil || r.Header.Get("X-Forwarded-Proto") == "https" {
 		scheme = "https"
