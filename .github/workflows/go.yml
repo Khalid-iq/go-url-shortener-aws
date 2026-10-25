@@ -12,10 +12,10 @@ on:
 
 env:
   AWS_REGION: eu-central-1
-  AWS_ROLE_ARN: arn:aws:iam::641471776760:role/url-shortener-github-actions
+  AWS_ROLE_ARN: arn:aws:iam::541271671872:role/url-shortener-github-actions
   ECR_REPOSITORY: url-shortener
-  ECR_REGISTRY: 641471776760.dkr.ecr.eu-central-1.amazonaws.com
-  DEPLOY_ROLE_ARN: arn:aws:iam::641471776760:role/url-shortener-github-deploy
+  ECR_REGISTRY: 541271671872.dkr.ecr.eu-central-1.amazonaws.com
+  DEPLOY_ROLE_ARN: arn:aws:iam::541271671872:role/url-shortener-github-deploy
   FUNCTION_NAME: url-shortener
 
 jobs:

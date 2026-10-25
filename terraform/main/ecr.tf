@@ -1,6 +1,7 @@
 resource "aws_ecr_repository" "app" {
   name = var.project
 
+
   # Images are tagged with the git commit SHA, so a tag should never be
   # overwritten with different contents.
   image_tag_mutability = "IMMUTABLE"

@@ -19,5 +19,11 @@ variable "github_repo" {
 variable "image_tag" {
   description = "Image tag for the function's first deploy; CI updates it after that"
   type        = string
-  default     = "bcd73c52547155181ee7d0600c03714061fcece3"
+  default     = "f983ee075ba1b052fa947f67123cf5c76fcee226"
+}
+
+variable "domain_name" {
+  description = "Public domain for the shortener"
+  type        = string
+  default     = "kqlinks.com"
 }
